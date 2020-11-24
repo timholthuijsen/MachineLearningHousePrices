@@ -1,0 +1,48 @@
+The goal of this assignment is to predict house prices, using a combination of L1, L2, and L1 + L2 regularisation.
+In addition to this, we will tune the hyper-parameters to be as efficient as possible and plot learning curves for the model with these optimal hyper parameters.
+
+When first looking at and exploring the data, my first step was to try and get the .py files to work. 
+There was a small error with all_data referencing to "AmesHousing.txt" rather than "housing-data.csv", but this was easily fixed by correcting the filename.
+Most importantly, getting the files to meant including all of their required imports. 
+Once the files worked, preparing_datasets.py could be used to create hold-out.csv. This file was included in the work.
+
+Now to actually create a functioning model, a preprocessing system of imputers, pipelines and a ColumnTransformer were created. 
+This eventual pipeline system which gets all of the data in the right format can now be used on a specific regression model.
+In order to test whether everything worked, I created a simple lasso_model, and applied this to the chosen_model through my recently created Transformer preprocessing.
+
+After fixing some errors, the model and processing work!!!
+
+While this original test-model was very rudimentary, evaluating it with evaluation.py show that the model is already quite skillfull. 
+This simple lasso test model can already predict house prices with an R squared of 0.9279, which is surprisingly high. 
+The mean average error for this first iteration was a little over 15k.
+In order to evaluate the model a bit further, I also imported utils.py from the previous assignment in order to create the True vs Predicted house value graph again
+This first graph is included in the /images folder under the name FirstLasso.png
+
+Now we begin optimizing the hyperparameters, starting with the Lasso model. This is done by creating a parameter grid, and then finding this grid's best solutions with GridSearchCV. 
+The specific optimal hyperparameters for the Lasso model turned out to be: {'model__alpha': 15, 'model__normalize': True, 'model__selection': 'cyclic'}
+Using these changed hyperparameters in the model indeed shows an improvement in prediciton accuracy.
+If we use these optimized parameters and evaluate the model again with evaluation.py, R squared has indeed increased and the mean average error has decreased, as we wanted them to.
+The new evaluation results are:
+{'r2': 0.9390240603969717, 'mae': 14090.008640110462, 'mse': 405487296.84671897}
+
+Now we do exatly the same for the ridge regression. From this hyperparameter tuning, the best hyperparameters for the ridge regression turned out to be:
+{'model__alpha': 0.5, 'model__normalize': True, 'model__solver': 'auto'}
+
+These optimized models can now be used to create learning curves. For plotting these learning curves, we simply use the plot_learning_curves function from the lectures.
+When using this function, the learning curves look as we would expect them to look:
+with the training line starting with a low error, which increases as the set size increases, and the valuation set starting with a high error, which decreases as the set size increases.
+These plots are included in the folder images. 
+
+To conclude, we do the same thing with an ElasticNet model to combine L1 and L2 regularization, and create a learning curve of this. The optimized hyperparameters for this model turn out to be:
+{'model__alpha': 0.0025, 'model__l1_ratio': 0.95, 'model__normalize': True}
+When evaluating the model with evaluation.py with these parameters, this leads to the score of:
+'r2': 0.9302183002181821, 'mae': 14693.028765940224, 'mse': 464045211.90016025
+While good, these scores are still worse than the scores we had for the optimized Lasso regression. Therefore, the chosen_model will be the Lasso regression with tuned hyperparameters.
+
+This means the final score of the chosen_model will be:
+{'r2': 0.9390240603969717, 'mae': 14090.008640110462, 'mse': 405487296.84671897}
+
+
+
+
+
